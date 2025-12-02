@@ -28,9 +28,9 @@ import type {
   ProcessedNaverItem,
   NaverPriceSummary,
   NaverSearchFilters,
-  NaverApiException,
-  TRUSTED_MALLS,
-  OVERSEAS_KEYWORDS,
+  // NaverApiException,
+  // TRUSTED_MALLS,
+  // OVERSEAS_KEYWORDS,
 } from '@/types/naver';
 
 // ============================================================================

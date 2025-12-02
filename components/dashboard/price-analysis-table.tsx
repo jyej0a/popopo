@@ -8,7 +8,7 @@
 'use client';
 
 import { useState } from 'react';
-import { TrendingUp, TrendingDown, Columns3, X } from 'lucide-react';
+import { TrendingUp, TrendingDown, Columns3 } from 'lucide-react';
 import {
   Table,
   TableBody,

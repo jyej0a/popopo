@@ -113,11 +113,13 @@ async function fetchFromExchangeRateApi(): Promise<ExchangeRate> {
  * 
  * @see https://www.koreaexim.go.kr/site/program/financial/exchangeJSON
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function fetchFromKoreximApi(): Promise<ExchangeRate> {
   // 한국수출입은행 API는 무료이며 인증키가 필요 없는 경우도 있음
   // 필요시 환경 변수로 API 키 추가
   
   const today = new Date().toISOString().split('T')[0].replace(/-/g, '');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const url = `https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=YOUR_AUTH_KEY&searchdate=${today}&data=AP01`;
   
   // 이 API는 인증키가 필요하므로, 실제로는 사용하기 어려움

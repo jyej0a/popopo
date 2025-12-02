@@ -15,8 +15,8 @@ import { ProductCard } from '@/components/dashboard/product-card';
 import { PriceAnalysisTable, type PriceAnalysisRow } from '@/components/dashboard/price-analysis-table';
 import { BulkActionBar } from '@/components/dashboard/bulk-action-bar';
 import { SettingsSidebar } from '@/components/dashboard/settings-sidebar';
-import { searchProduct, searchProductByCustomCode, getProductSkus, getSpusWithSalesVolume } from '@/actions/product-actions';
-import { fetchNaverPrice, fetchPoizonMarketPrice } from '@/actions/price-actions';
+import { searchProduct, searchProductByCustomCode, /* getProductSkus, */ getSpusWithSalesVolume } from '@/actions/product-actions';
+import { /* fetchNaverPrice, */ fetchPoizonMarketPrice } from '@/actions/price-actions';
 import { placeBid, placeBulkBids } from '@/actions/bid-actions';
 import { DEFAULT_SETTINGS, calculateMargin, type CalculatorSettings } from '@/lib/calculator';
 import { Badge } from '@/components/ui/badge';
@@ -150,7 +150,6 @@ export default function DashboardPage() {
           console.log('🔄 API 호출 전략: Custom Code → Article Number (Fallback)');
           
           let searchResult;
-          let usedCustomCodeApi = false;
           
           // 1-1. Custom Code API 먼저 시도 (판매량 포함)
           try {
@@ -161,7 +160,6 @@ export default function DashboardPage() {
             if (customCodeResult.success && customCodeResult.data && Array.isArray(customCodeResult.data) && customCodeResult.data.length > 0) {
               console.log('  🎉 Custom Code API 성공! (결과 있음)');
               searchResult = customCodeResult;
-              usedCustomCodeApi = true;
             } else {
               console.warn('  ⚠️ Custom Code API 결과 없음 (빈 배열)');
               throw new Error('No results from Custom Code API');

@@ -121,7 +121,7 @@ export async function searchProductByCustomCode(
     });
     
     console.log('✅ Success: Product found');
-    console.log('  └─ Total SKUs:', result.skuInfoList?.length || 0);
+    console.log('  └─ Total SKUs:', result[0]?.skuInfoList?.length || 0);
     console.groupEnd();
     
     return {
