@@ -263,10 +263,10 @@ export async function searchByStyleCode(
 
   console.log('');
   console.log('📊 Article Number API 응답:');
-  console.log('spuInfo:', response.data.spuInfo ? '있음' : '없음');
-  console.log('skuInfoList 개수:', response.data.skuInfoList?.length || 0);
-  if (response.data.skuInfoList && response.data.skuInfoList.length > 0) {
-    const firstSku = response.data.skuInfoList[0];
+  console.log('spuInfo:', response.data[0]?.spuInfo ? '있음' : '없음');
+  console.log('skuInfoList 개수:', response.data[0]?.skuInfoList?.length || 0);
+  if (response.data[0]?.skuInfoList && response.data[0].skuInfoList.length > 0) {
+    const firstSku = response.data[0].skuInfoList[0];
     console.log('첫 번째 SKU 판매량 필드:', {
       localSoldNum: firstSku.localSoldNum,
       globalSoldNum: firstSku.globalSoldNum,
@@ -326,10 +326,10 @@ export async function searchByCustomCode(
 
   console.log('');
   console.log('📊 Custom Code API 응답:');
-  console.log('spuInfo:', response.data.spuInfo ? '있음' : '없음');
-  console.log('skuInfoList 개수:', response.data.skuInfoList?.length || 0);
-  if (response.data.skuInfoList && response.data.skuInfoList.length > 0) {
-    const firstSku = response.data.skuInfoList[0];
+  console.log('spuInfo:', response.data[0]?.spuInfo ? '있음' : '없음');
+  console.log('skuInfoList 개수:', response.data[0]?.skuInfoList?.length || 0);
+  if (response.data[0]?.skuInfoList && response.data[0].skuInfoList.length > 0) {
+    const firstSku = response.data[0].skuInfoList[0];
     console.log('첫 번째 SKU 판매량:', {
       localSoldNum: firstSku.localSoldNum,
       globalSoldNum: firstSku.globalSoldNum,
