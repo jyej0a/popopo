@@ -485,7 +485,16 @@ export default function DashboardPage() {
                 regionSkuId: skuInfo.regionSkuId,
                 dwSkuId: skuInfo.dwSkuId,
                 
-                // 상품 정보
+                // ========================================
+                // 🔥 RAW DATA: 3개 API 원본 응답 (변환 없음!)
+                // ========================================
+                rawSkuInfo: skuInfo,                    // API 1: SKU 기본 정보 (전체)
+                rawMarketPrice: poizonMarketPriceData,  // API 2: 시장 최저가 (전체)
+                rawBrandStats: salesVolumeMap.get(productData.globalSpuId), // API 3: 판매량 (전체)
+                
+                // ========================================
+                // 기존 매핑 데이터 (참고용, 정확하지 않을 수 있음)
+                // ========================================
                 brand: productData.spuInfo?.brandName || 'Unknown',
                 productName: productData.spuInfo?.title || `${styleCode} - Unknown`,
                 articleNumber: styleCode,
@@ -504,7 +513,7 @@ export default function DashboardPage() {
                 sizeJP: allSizeInfo['JP'] || '',
                 sizeKR: allSizeInfo['KR'] || '',
                 
-                // 가격 정보
+                // 가격 정보 (임시 추측 - 정확하지 않음!)
                 poizonPrice,
                 minPrice: skuInfo.minPrice ? JSON.stringify(skuInfo.minPrice) : '', // 최저가 정보
                 
@@ -523,51 +532,10 @@ export default function DashboardPage() {
                 // 정렬 순서
                 sortOrder: skuInfo.sort || 0,
                 
-                // 판매량 통계 (statisticsDataQry 또는 브랜드 조회에서)
-                salesVolume: (() => {
-                  const spuSalesData = salesVolumeMap.get(productData.globalSpuId);
-                  
-                  console.log(`📊 판매량 추출 (SKU: ${skuInfo.globalSkuId}, SPU: ${productData.globalSpuId}):`, {
-                    'skuInfo.globalSoldNum': skuInfo.globalSoldNum,
-                    'skuInfo.localSoldNum': skuInfo.localSoldNum,
-                    'Map에서 찾은 데이터': spuSalesData ? {
-                      globalSoldNum: spuSalesData.globalSoldNum,
-                      localSoldNum: spuSalesData.localSoldNum,
-                    } : 'Map에 없음',
-                    'Map 크기': salesVolumeMap.size,
-                  });
-                  
-                  // 1순위: SKU에 직접 포함된 판매량
-                  if (skuInfo.globalSoldNum) {
-                    console.log(`  ✅ SKU globalSoldNum 사용: ${skuInfo.globalSoldNum}`);
-                    return skuInfo.globalSoldNum;
-                  }
-                  if (skuInfo.localSoldNum) {
-                    console.log(`  ✅ SKU localSoldNum 사용: ${skuInfo.localSoldNum}`);
-                    return skuInfo.localSoldNum;
-                  }
-                  
-                  // 2순위: 브랜드 조회로 가져온 SPU 판매량
-                  if (spuSalesData?.globalSoldNum) {
-                    console.log(`  ✅ SPU globalSoldNum 사용: ${spuSalesData.globalSoldNum}`);
-                    return spuSalesData.globalSoldNum;
-                  }
-                  if (spuSalesData?.localSoldNum) {
-                    console.log(`  ✅ SPU localSoldNum 사용: ${spuSalesData.localSoldNum}`);
-                    return spuSalesData.localSoldNum;
-                  }
-                  
-                  console.warn(`  ⚠️ 판매량 정보 없음!`);
-                  return 0;
-                })(),
-                expectedSales: (() => {
-                  const spuSalesData = salesVolumeMap.get(productData.globalSpuId);
-                  return skuInfo.globalSoldNum || spuSalesData?.globalSoldNum || 0;
-                })(),
-                sales30Days: (() => {
-                  const spuSalesData = salesVolumeMap.get(productData.globalSpuId);
-                  return skuInfo.localSoldNum || spuSalesData?.localSoldNum || 0;
-                })(),
+                // 판매량 (임시 추측 - 정확하지 않음!)
+                salesVolume: skuInfo.globalSoldNum || skuInfo.localSoldNum || 0,
+                expectedSales: 0,
+                sales30Days: 0,
                 
                 // 네이버 가격 (추후 추가)
                 naverPrice: 0,
@@ -782,7 +750,10 @@ export default function DashboardPage() {
           </div>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {products.map((product) => (
-              <ProductCard key={product.spuId} product={product} />
+              <ProductCard 
+                key={`product-${product.spuId}-${product.globalSpuId}`} 
+                product={product} 
+              />
             ))}
           </div>
         </div>

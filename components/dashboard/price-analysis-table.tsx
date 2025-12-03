@@ -57,6 +57,13 @@ export interface PriceAnalysisRow {
   color?: string; // 색상
   otherOptions?: string; // 기타 옵션
   
+  // ========================================
+  // 🔥 RAW DATA DEBUG: 3개 API 원본 응답
+  // ========================================
+  rawSkuInfo?: unknown;       // API 1: SKU 기본 정보 (sku-basic-info) 전체
+  rawMarketPrice?: unknown;   // API 2: 시장 최저가 (getMarketPrice) 전체  
+  rawBrandStats?: unknown;    // API 3: 브랜드 판매량 (getBrandStatistics) 전체
+  
   // 사이즈 정보
   size: string; // 메인 사이즈 (표시용)
   sizeUS?: string;
@@ -126,13 +133,20 @@ const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   // 선택
   { key: 'select', label: '선택', defaultVisible: true, category: 'selection' },
   
+  // ========================================
+  // 🔥 RAW DATA: 3개 API 원본 응답 (JSON 형태로 표시)
+  // ========================================
+  { key: 'rawSkuInfo', label: '🔥 API 1: SKU 기본정보 (전체)', description: 'sku-basic-info 원본 응답', defaultVisible: true, category: 'other' },
+  { key: 'rawMarketPrice', label: '🔥 API 2: 시장 최저가 (전체)', description: 'getMarketPrice 원본 응답', defaultVisible: true, category: 'other' },
+  { key: 'rawBrandStats', label: '🔥 API 3: 판매량 통계 (전체)', description: 'getBrandStatistics 원본 응답', defaultVisible: true, category: 'other' },
+  
   // 기본 정보
-  { key: 'brand', label: '브랜드', description: 'Brand Name', defaultVisible: true, category: 'basic' },
-  { key: 'productName', label: '상품명', description: 'Product Name', defaultVisible: true, category: 'basic' },
-  { key: 'articleNumber', label: '품번', description: 'Article Number', defaultVisible: true, category: 'basic' },
+  { key: 'brand', label: '브랜드', description: 'Brand Name', defaultVisible: false, category: 'basic' },
+  { key: 'productName', label: '상품명', description: 'Product Name', defaultVisible: false, category: 'basic' },
+  { key: 'articleNumber', label: '품번', description: 'Article Number', defaultVisible: false, category: 'basic' },
   { key: 'categoryName', label: '카테고리', description: 'Category', defaultVisible: false, category: 'basic' },
   { key: 'fit', label: '성별', description: 'Men/Women', defaultVisible: false, category: 'basic' },
-  { key: 'color', label: '색상', description: 'Color', defaultVisible: true, category: 'basic' },
+  { key: 'color', label: '색상', description: 'Color', defaultVisible: false, category: 'basic' },
   { key: 'otherOptions', label: '기타 옵션', description: 'Other Options', defaultVisible: false, category: 'basic' },
   
   // ID 정보
@@ -141,23 +155,23 @@ const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   { key: 'regionSkuId', label: 'Region SKU ID', defaultVisible: false, category: 'ids' },
   
   // 사이즈 정보
-  { key: 'size', label: '사이즈', description: 'Main Size', defaultVisible: true, category: 'sizes' },
+  { key: 'size', label: '사이즈', description: 'Main Size', defaultVisible: false, category: 'sizes' },
   { key: 'sizeUS', label: 'US', description: 'US Size', defaultVisible: false, category: 'sizes' },
-  { key: 'sizeEU', label: 'EU', description: 'EU Size', defaultVisible: true, category: 'sizes' },
+  { key: 'sizeEU', label: 'EU', description: 'EU Size', defaultVisible: false, category: 'sizes' },
   { key: 'sizeUK', label: 'UK', description: 'UK Size', defaultVisible: false, category: 'sizes' },
   { key: 'sizeJP', label: 'JP', description: 'JP Size', defaultVisible: false, category: 'sizes' },
-  { key: 'sizeKR', label: 'KR', description: 'KR Size', defaultVisible: true, category: 'sizes' },
+  { key: 'sizeKR', label: 'KR', description: 'KR Size', defaultVisible: false, category: 'sizes' },
   
   // 가격 정보
-  { key: 'poizonPrice', label: 'POIZON 가격', description: 'CNY', defaultVisible: true, category: 'prices' },
+  { key: 'poizonPrice', label: 'POIZON 가격', description: 'CNY', defaultVisible: false, category: 'prices' },
   { key: 'minPrice', label: '최저가', description: 'Min Price', defaultVisible: false, category: 'prices' },
   { key: 'naverPrice', label: '네이버 가격', description: 'KRW', defaultVisible: false, category: 'prices' },
   { key: 'profit', label: '예상 수익', description: 'KRW', defaultVisible: false, category: 'prices' },
   { key: 'roi', label: 'ROI', description: '%', defaultVisible: false, category: 'prices' },
   
   // 상태 정보
-  { key: 'status', label: '상태', description: 'Status', defaultVisible: true, category: 'status' },
-  { key: 'buyStatus', label: '구매 상태', description: 'Buy Status', defaultVisible: true, category: 'status' },
+  { key: 'status', label: '상태', description: 'Status', defaultVisible: false, category: 'status' },
+  { key: 'buyStatus', label: '구매 상태', description: 'Buy Status', defaultVisible: false, category: 'status' },
   { key: 'userHasBid', label: '입찰 여부', description: 'Bid Status', defaultVisible: false, category: 'status' },
   
   // 기타 정보
@@ -165,11 +179,11 @@ const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   { key: 'barcodeList', label: '바코드 목록', description: 'All Barcodes', defaultVisible: false, category: 'other' },
   { key: 'sortOrder', label: '정렬순서', description: 'Sort Order', defaultVisible: false, category: 'other' },
   { key: 'salesVolume', label: '현재 판매량', description: 'Current Sales', defaultVisible: false, category: 'other' },
-  { key: 'sales30Days', label: '30일 판매량', description: '30 Days Sales', defaultVisible: true, category: 'other' },
-  { key: 'expectedSales', label: '예상 판매량', description: 'Expected Sales', defaultVisible: true, category: 'other' },
+  { key: 'sales30Days', label: '30일 판매량', description: '30 Days Sales', defaultVisible: false, category: 'other' },
+  { key: 'expectedSales', label: '예상 판매량', description: 'Expected Sales', defaultVisible: false, category: 'other' },
   
   // 액션
-  { key: 'actions', label: '입찰', description: 'Bid Actions', defaultVisible: true, category: 'actions' },
+  { key: 'actions', label: '입찰', description: 'Bid Actions', defaultVisible: false, category: 'actions' },
 ];
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -300,6 +314,20 @@ export function PriceAnalysisTable({
           />
         );
       
+      // ========================================
+      // 🔥 RAW DATA: JSON 형태로 표시
+      // ========================================
+      case 'rawSkuInfo':
+      case 'rawMarketPrice':
+      case 'rawBrandStats':
+        return (
+          <div className="max-w-md overflow-auto bg-slate-50 dark:bg-slate-900 p-2 rounded font-mono text-xs">
+            <pre className="whitespace-pre-wrap break-words">
+              {row[columnKey] ? JSON.stringify(row[columnKey], null, 2) : '없음'}
+            </pre>
+          </div>
+        );
+      
       case 'brand':
       case 'productName':
       case 'articleNumber':
@@ -388,7 +416,7 @@ export function PriceAnalysisTable({
         );
       
       case 'actions':
-        return (
+    return (
           <div className="flex items-center gap-2">
             <Input
               type="number"
@@ -405,12 +433,12 @@ export function PriceAnalysisTable({
             >
               {biddingSkus.has(row.skuId) ? '입찰 중...' : '입찰'}
             </Button>
-          </div>
-        );
+      </div>
+    );
       
       default:
         return <span>-</span>;
-    }
+  }
   };
 
   // 빈 상태
@@ -520,9 +548,9 @@ export function PriceAnalysisTable({
 
       {/* 테이블 */}
       <div className="rounded-lg border overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
+      <Table>
+        <TableHeader>
+          <TableRow>
               {visibleColumnDefs.map((col) => (
                 <TableHead key={col.key}>
                   {col.key === 'select' ? (
@@ -543,12 +571,12 @@ export function PriceAnalysisTable({
                 {visibleColumnDefs.map((col) => (
                   <TableCell key={col.key}>
                     {renderCell(row, col.key)}
-                  </TableCell>
+                </TableCell>
                 ))}
               </TableRow>
             ))}
-          </TableBody>
-        </Table>
+        </TableBody>
+      </Table>
       </div>
     </div>
   );
