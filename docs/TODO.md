@@ -191,14 +191,31 @@
   - [x] 가격 분석 로직
   - [x] 입찰 실행 로직
   - [x] Toast 알림 연동
+  - [x] DashboardLayout 컴포넌트 사용 (컴포넌트 기반 레이아웃)
 
-### 4.2 설정 페이지
-- [ ] `app/dashboard/settings/page.tsx` - 사용자 설정 (선택)
+### 4.2 레이아웃 구조
+- [x] `components/dashboard/dashboard-layout.tsx` - 대시보드 레이아웃 컴포넌트 ✅
+  - [x] 메인 컨텐츠 영역
+  - [x] 사이드바 영역 (설정 사이드바 포함)
+  - [x] 반응형 그리드 레이아웃
+- [ ] `app/dashboard/layout.tsx` - Next.js 레이아웃 파일 (선택, 현재는 컴포넌트로 대체됨)
+  - [ ] 공통 헤더/푸터 추가 시 필요
+  - [ ] 메타데이터 설정 시 필요
+
+### 4.3 설정 페이지
+- [ ] `app/dashboard/settings/page.tsx` - 사용자 설정 페이지 (선택)
   - [ ] API 키 관리
   - [ ] 기본 설정값 관리
+  - [ ] 현재는 SettingsSidebar 컴포넌트로 대체됨
+  - **참고**: 현재 메인 대시보드에 SettingsSidebar가 통합되어 있어 별도 페이지 불필요할 수 있음
 
-### 4.3 입찰 내역 페이지 (선택)
-- [ ] `app/dashboard/bids/page.tsx` - 입찰 내역 조회
+### 4.4 입찰 내역 페이지
+- [ ] `app/dashboard/bids/page.tsx` - 입찰 내역 조회 페이지 (선택)
+  - [ ] 내 입찰 내역 목록 표시
+  - [ ] 입찰 상태 필터링 (대기/성공/실패)
+  - [ ] 입찰 취소 기능
+  - [ ] 입찰 히스토리 조회
+  - **참고**: `actions/bid-actions.ts`의 `getMyBids()` 함수와 연동 필요
 
 ## Phase 5: 테스트 및 최적화
 
